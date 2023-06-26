@@ -86,4 +86,5 @@ fi
 
 FLAGS="$FLAGS --bootnodes=$HIVE_BOOTNODE"
 echo "Running ethereumjs with flags $FLAGS"
+export DEBUG="ejs,vm:*"
 $ethereumjs $FLAGS

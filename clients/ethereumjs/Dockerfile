@@ -1,14 +1,23 @@
-FROM node:16-alpine as build
-RUN apk update && apk add --no-cache bash git jq curl python3 gcc make g++ && rm -rf /var/cache/apk/*
-RUN git clone --depth 1 https://github.com/ethereumjs/ethereumjs-monorepo.git && \
-    (cd ethereumjs-monorepo && npm i)
+FROM node:18-alpine as build
+RUN apk update && apk add --no-cache bash git jq curl python3 gcc make g++ rsync && rm -rf /var/cache/apk/*
 
-RUN cd ethereumjs-monorepo/packages/client && npm ethereumjs --version > /version.txt
+RUN mkdir /ethereumjs-monorepo
+WORKDIR /ethereumjs-monorepo
+
+COPY ethereumjs-monorepo/package.json .
+COPY ethereumjs-monorepo/package-lock.json .
+RUN npm i --ignore-scripts
+
+COPY ethereumjs-monorepo ./
+RUN npm i
+
+WORKDIR /
 
 ADD ethereumjs.sh /ethereumjs.sh
 ADD mapper.jq /mapper.jq
 ADD jwtsecret /jwtsecret
 RUN chmod +x /ethereumjs.sh
+
 
 # Inject the enode id retriever script
 RUN mkdir /hive-bin
