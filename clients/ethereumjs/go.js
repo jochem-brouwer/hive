@@ -1,8 +1,13 @@
+// Tool to quickly generate some of the COPY commands
+
 const fs = require('fs')
 
 const packages = ["block", "blockchain", "client", "common", "devp2p", "ethash", "evm", "genesis", "rlp", "statemanager", "trie", "tx", "util", "verkle", "vm", "wallet"]
 
-const exclude = ["node_modules", "packages"]
+// Exclude these files on the COPY
+// Note: .git is added because otherwise each git commit will retrigger the entire build process
+// Also inspect the output to not include any random logs or .gitignore files
+const exclude = ["node_modules", "packages", ".git"]
 
 async function ls(path) {
   const dir = await fs.promises.opendir(path)
