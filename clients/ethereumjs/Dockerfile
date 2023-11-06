@@ -52,6 +52,7 @@ COPY ${local_path}/packages/verkle/package.json ethereumjs-monorepo/packages/ver
 COPY ${local_path}/packages/vm/package.json ethereumjs-monorepo/packages/vm/package.json
 COPY ${local_path}/packages/wallet/package.json ethereumjs-monorepo/packages/wallet/package.json
 
+# for npm run prepare
 RUN cd ethereumjs-monorepo && git init
 
 RUN cd ethereumjs-monorepo && cp package.json package.json.bak && npm pkg set scripts.postinstall="echo no-postinstall"
@@ -61,37 +62,23 @@ RUN cd ethereumjs-monorepo && cp package.json.bak package.json && rm package.jso
 COPY ${local_path}/node_modules/@ethereumjs ethereumjs-monorepo/node_modules/@ethereumjs
 
 COPY ${local_path}/packages/rlp ethereumjs-monorepo/packages/rlp
-RUN cd ethereumjs-monorepo/packages/rlp && npm run build
 COPY ${local_path}/packages/util ethereumjs-monorepo/packages/util
-RUN cd ethereumjs-monorepo/packages/util && npm run build
 COPY ${local_path}/packages/verkle ethereumjs-monorepo/packages/verkle
-RUN cd ethereumjs-monorepo/packages/verkle && npm run build
 COPY ${local_path}/packages/wallet ethereumjs-monorepo/packages/wallet
-RUN cd ethereumjs-monorepo/packages/wallet && npm run build
 COPY ${local_path}/packages/common ethereumjs-monorepo/packages/common
-RUN cd ethereumjs-monorepo/packages/common && npm run build
 COPY ${local_path}/packages/devp2p ethereumjs-monorepo/packages/devp2p
-RUN cd ethereumjs-monorepo/packages/devp2p && npm run build
 COPY ${local_path}/packages/genesis ethereumjs-monorepo/packages/genesis
-RUN cd ethereumjs-monorepo/packages/genesis && npm run build
-
-
 COPY ${local_path}/packages/trie ethereumjs-monorepo/packages/trie
-RUN cd ethereumjs-monorepo/packages/trie && npm run build
 COPY ${local_path}/packages/statemanager ethereumjs-monorepo/packages/statemanager
-RUN cd ethereumjs-monorepo/packages/statemanager && npm run build
 COPY ${local_path}/packages/tx ethereumjs-monorepo/packages/tx
-RUN cd ethereumjs-monorepo/packages/tx && npm run build
 COPY ${local_path}/packages/evm ethereumjs-monorepo/packages/evm
-RUN cd ethereumjs-monorepo/packages/evm && npm run build
 COPY ${local_path}/packages/block ethereumjs-monorepo/packages/block
-RUN cd ethereumjs-monorepo/packages/block && npm run build
 COPY ${local_path}/packages/ethash ethereumjs-monorepo/packages/ethash
-RUN cd ethereumjs-monorepo/packages/ethash && npm run build
 COPY ${local_path}/packages/blockchain ethereumjs-monorepo/packages/blockchain
-RUN cd ethereumjs-monorepo/packages/blockchain && npm run build
 COPY ${local_path}/packages/vm ethereumjs-monorepo/packages/vm
-RUN cd ethereumjs-monorepo/packages/vm && npm run build
+
+RUN cd ethereumjs-monorepo/packages/client && cp package.json package.json.bak && npm pkg set scripts.build="echo no-build"
+RUN cd ethereumjs-monorepo && npm run build --workspaces
 
 COPY ${local_path}/packages/client ethereumjs-monorepo/packages/client
 
