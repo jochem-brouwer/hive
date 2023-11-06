@@ -46,8 +46,10 @@
 # Immediately abort the script on any error encountered
 set -e
 
-ethereumjs="node /ethereumjs-monorepo/packages/client/dist/bin/cli.js"
-FLAGS="--gethGenesis ./genesis.json --rpc --rpcEngine --saveReceipts --rpcAddr 0.0.0.0 --rpcEngineAddr 0.0.0.0 --rpcEnginePort 8551 --ws false --logLevel debug --rpcDebug --isSingleNode"
+cd /ethereumjs-monorepo/packages/client/
+
+ethereumjs="ts-node /ethereumjs-monorepo/packages/client/bin/cli.ts"
+FLAGS="--gethGenesis /genesis.json --rpc --rpcEngine --saveReceipts --rpcAddr 0.0.0.0 --rpcEngineAddr 0.0.0.0 --rpcEnginePort 8551 --ws false --logLevel debug --rpcDebug all --rpcDebugVerbose all --isSingleNode"
 
 # Configure the chain.
 mv /genesis.json /genesis-input.json
@@ -66,15 +68,15 @@ fi
 if [ "$HIVE_CLIQUE_PRIVATEKEY" != "" ]; then
     # Create password file.
     echo "Importing clique key..."
-    echo -n "$HIVE_CLIQUE_PRIVATEKEY" > ./private_key.txt
+    echo -n "$HIVE_CLIQUE_PRIVATEKEY" > /private_key.txt
     # Ensure password file is used when running ethereumjs in mining mode.
     if [ "$HIVE_MINER" != "" ]; then
-        FLAGS="$FLAGS --mine --unlock ./private_key.txt --minerCoinbase $HIVE_MINER"
+        FLAGS="$FLAGS --mine --unlock /private_key.txt --minerCoinbase $HIVE_MINER"
     fi
 fi
 
 if [ "$HIVE_TERMINAL_TOTAL_DIFFICULTY" != "" ]; then
-    FLAGS="$FLAGS --jwt-secret ./jwtsecret"
+    FLAGS="$FLAGS --jwt-secret /jwtsecret"
 fi
 
 # Load the test chain if present
